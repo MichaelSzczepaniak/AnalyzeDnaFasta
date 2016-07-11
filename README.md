@@ -1,7 +1,7 @@
 # DnaSeqFastA
 
 ## Description
-This is small Python project that reads a file containing DNA sequences in a multi-FASTA format and does the following analysis:
+This is a small Python project that reads a file containing DNA sequences in a multi-FASTA format and does the following analysis:
 
 1. Determines the number of records in the file.
 2. Determines the longest and shortest sequences and creates a histogram of sequence lengths
@@ -18,10 +18,10 @@ To run the program, from the teminal: <pre>python dnaseqfasta.py fastafile repea
 
 ### Inputs
 The first parameter, **fastafile** is a FASTA file which will be parsed and analyzed for the quantities described above.
-The second parameter, **repeatsequencefile** is a file containing a single line of 'A', 'T', 'G', and 'C' characters representing nucleotide sequences.  These characters may be lower case (as permitted by [NCBI in doing BLAST queries](http://blast.ncbi.nlm.nih.gov/blastcgihelp.shtml).
+The second parameter, **repeatsequencefile** is a file containing a single line of 'A', 'T', 'G', and 'C' characters representing nucleotide sequences.  These characters may be lower case (as permitted by [NCBI in doing BLAST queries](http://blast.ncbi.nlm.nih.gov/blastcgihelp.shtml)).
 
 ### Outputs
 The program outputs a file call **dnaFastaAnalysis.txt** to the directory from which **dnaseqfasta.py** is executed.
 
-## Version
+## Python Version
 This project was developed using the Anaconda distribution of Python 3.5.1.
