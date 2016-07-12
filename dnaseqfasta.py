@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 import sys
+import numpy as np
 
 def main():
-    file_fasta = sys.argv[1]
-    file_repseq = sys.argv[2]
+    file_fasta = sys.argv[1]   # 1st arg should be the FASTA file
+    file_repseq = sys.argv[2]  # 2nd arg should be the seq to check for repeats
     data_fasta = readFasta(file_fasta)
     record_count = getRecordCount(data_fasta)
     s = "input file = {}".format(file_fasta)
@@ -22,6 +23,18 @@ def getRecordCount(fasta_dat) :
     values = string that represents a DNA sequence of A's T's, G's and C's
     """
     return len(fasta_dat.keys())
+    
+def getLongestSeq(fasts_data) :
+    """ Returns an n-tuple of 2-tuples where elements in the inner 2-tuple
+    are the sequence id (first element) and length of the longest sequence
+    (second element)
+    """
+    
+def getShortestSeq(fasts_data) :
+    """ Returns an n-tuple of 2-tuples where elements in the inner 2-tuple
+    are the sequence id (first element) and length of the shortest sequence
+    (second element)
+    """
 
 # test string
 # dna = "atgtaaatatgctagatgcccat"
