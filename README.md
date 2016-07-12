@@ -14,7 +14,7 @@ This is a small Python project that reads a file containing DNA sequences in a m
 9. Determine the most frequent repeat in a given set of repeats.
 
 ## Usage
-To run the program, from the teminal: <pre>python dnaseqfasta.py fastafile repeatsequencefile outfile</pre>
+To run the program, from the teminal: <pre>python dnaseqfasta.py fastafile repeatsequencefile</pre>
 
 ### Inputs
 The first parameter, **fastafile** is a FASTA file which will be parsed and analyzed for the quantities described above.
