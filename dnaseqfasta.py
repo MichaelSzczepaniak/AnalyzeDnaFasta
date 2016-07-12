@@ -1,9 +1,27 @@
+#!/usr/bin/python3
 import sys
 
 def main():
-    print('main function')
+    file_fasta = sys.argv[1]
+    file_repseq = sys.argv[2]
+    data_fasta = readFasta(file_fasta)
+    record_count = getRecordCount(data_fasta)
+    s = "input file = {}".format(file_fasta)
+    output_content = [s, ]
+    output_content.append("record count = {}".format(record_count))
+    writeOutputFile(output_content)
 
-if __name__ == "__main__": main()  # allow func calls before def's
+def writeOutputFile(content_list) :
+    outfile = open('dnaFastaAnalysis.txt', 'w')
+    for line in content_list :
+        print(line, file = outfile, end = '\n')
+    outfile.close()
+
+def getRecordCount(fasta_dat) :
+    """ fasta_dat - dictionary with keys = sequence ids and
+    values = string that represents a DNA sequence of A's T's, G's and C's
+    """
+    return len(fasta_dat.keys())
 
 # test string
 # dna = "atgtaaatatgctagatgcccat"
@@ -30,8 +48,8 @@ def get_stop_codon(dna, frame=0) :
                 stop_codons_found[0] = i
             else :
                 stop_codons_found.append(i)
-        else :
-            print('not stop codon: ', codon)
+        #else :
+        #    print('not stop codon: ', codon)
             
     return stop_codons_found
 
@@ -47,9 +65,10 @@ def readFasta(inFilePath=".\dna.example.fasta") :
     """
     try:
         f = open(inFilePath)
+        print("FASTA file read successfully.")
     except IOError:
         print("File doesn't exist!  Exiting.")
-        
+        sys.exit(0)
         
     dnaSeqs = {}    # init empty dict
     for line in f:  # iterate thru lines in file
@@ -64,3 +83,5 @@ def readFasta(inFilePath=".\dna.example.fasta") :
     f.close()
     
     return dnaSeqs
+    
+if __name__ == "__main__": main()  # allow func calls before def's
