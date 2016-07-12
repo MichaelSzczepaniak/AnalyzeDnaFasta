@@ -1,18 +1,18 @@
->test01|123456789|6 triplets, 1st
+>test01|123456789|6_triplets_1st
 TCGGGCGAAGGCGGCAGC
->test02|123456789|4 triplets, 1st
+>test02|123456789|4_triplets_1st
 ATTGGGGAGGAG
->test03|123456789|4 triplets, 2nd
+>test03|123456789|4_triplets_2nd
 GACCTTGCATCG
->test04|123456789|6 triplets, 2nd
+>test04|123456789|6_triplets_2nd
 GCCCGGCGATTTGACGTC
->test05|123456789|3 triplets, 1st
-GAT CAG CCC
->test06|123456789|5 triplets, 1st
+>test05|123456789|3_triplets_1st
+GATCAGCCC
+>test06|123456789|5_triplets_1st
 ACGCCCGGCGCACCG
->test07|123456789|3 triplets, 2nd
-CTG GTA GCC
->test08|123456789|4 triplets, 3rd
+>test07|123456789|3_triplets_2nd
+CTGGTAGCC
+>test08|123456789|4_triplets_3rd
 CGTTGTTCGCCA
->test08|123456789|3 triplets, 3rd
-TTC GAG TCG
+>test09|123456789|3_triplets_3rd
+TTCGAGTCG
