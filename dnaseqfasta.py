@@ -10,8 +10,19 @@ def main():
     s = "input file = {}".format(file_fasta)
     output_content = [s, ]
     output_content.append("record count = {}".format(record_count))
+    longest_sequences = getLongestSeqs(data_fasta)
+    output_content.extend(getSeqLengthContent(longest_sequences))
     writeOutputFile(output_content)
 
+def getSeqLengthContent(length_tuple) :
+    """
+    """
+    return_list = ["----------", ]
+    for seq_id in length_tuple[1] :
+        return_list.append(seq_id)
+        
+    return(return_list)
+    
 def writeOutputFile(content_list) :
     outfile = open('dnaFastaAnalysis.txt', 'w')
     for line in content_list :
@@ -24,16 +35,33 @@ def getRecordCount(fasta_dat) :
     """
     return len(fasta_dat.keys())
     
-def getLongestSeq(fasts_data) :
-    """ Returns an n-tuple of 2-tuples where elements in the inner 2-tuple
-    are the sequence id (first element) and length of the longest sequence
-    (second element)
+def getLongestSeqs(fasta_data) :
+    """ Returns a 2-tuple where the first elements is the length of the longest
+    sequence and the second element is a list of sequence ids of sequences
+    that have this longest length.
     """
+    id_longest_seqs = []      # Store the ids of the longest seq's
+    length_longest_seq = -1   # Init length of longest sequence
+    for seq_id, dna_seq in sorted(fasta_data.items()) :
+        seq_len = len(fasta_data[seq_id])
+        print("seq_id:", seq_id, "\nhas length=seq_len")
+        # If this sequence is the longest we've seen so far, update
+        # length_longest_seq and reinit id_longest_seqs 
+        if(seq_len > length_longest_seq) :
+            length_longest_seq = seq_len
+            id_longest_seqs = [seq_id,]
+            print('new longest sequence =', seq_id, '\nhas length = ', seq_len)
+        elif(seq_len == length_longest_seq) :
+            id_longest_seqs.append(seq_id)
+            print('adding new seq to longest list:\n', seq_id)
+        # else - seq_len is smaller than existing value: just continue
+        
+    return((length_longest_seq, id_longest_seqs))
     
-def getShortestSeq(fasts_data) :
-    """ Returns an n-tuple of 2-tuples where elements in the inner 2-tuple
-    are the sequence id (first element) and length of the shortest sequence
-    (second element)
+def getShortestSeqs(fasta_data) :
+    """ Returns a 2-tuple where the first elements is the length of the shortest
+    sequence and the second element is a tuple of sequence ids of sequences
+    that have this shortest length.
     """
 
 # test string
@@ -87,9 +115,9 @@ def readFasta(inFilePath=".\dna.example.fasta") :
     for line in f:  # iterate thru lines in file
         line = line.rstrip()       # discard newlines
         if line.startswith('>') :  # Are we on a header line?
-            words = line.split()   # split on space
+            words = line.split()   # Split on space
             name = words[0][1:]    # Use everything right of > as dict key
-            dnaSeqs[name] = ''        # Add new key to dict (assigne value later)
+            dnaSeqs[name] = ''     # Add new key to dict (assigne value later)
         else :             # Line is not header, seq append DNA sequence
                            # Cont. appending parts of the seq
             dnaSeqs[name] = dnaSeqs[name] + line
