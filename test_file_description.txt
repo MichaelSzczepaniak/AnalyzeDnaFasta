@@ -1,0 +1,8 @@
+file name          description                             purpose
+----------------   -------------------------------------   --------
+dna.test01.fasta   8 sequences: 2 with 8 triplets,         test getLongestSeq
+                                1 with 5 triplets,         and getShortestSeq
+                                3 with 4 triplets, and     functions
+                                3 with 3 triplets
+                                
+dna.test01.fasta   tbd
