@@ -3,22 +3,30 @@ import sys
 import numpy as np
 
 def main():
+    """
+    dnaseqfasta.py dna.test01.fasta repseq.txt
+    """
     file_fasta = sys.argv[1]   # 1st arg should be the FASTA file
     file_repseq = sys.argv[2]  # 2nd arg should be the seq to check for repeats
     data_fasta = readFasta(file_fasta)
     record_count = getRecordCount(data_fasta)
-    s = "input file = {}".format(file_fasta)
-    output_content = [s, ]
+    input_line = "input file = {}".format(file_fasta)
+    output_content = [input_line, ]
     output_content.append("record count = {}".format(record_count))
-    longest_sequences = getLongestSeqs(data_fasta)
-    output_content.extend(getSeqLengthContent(longest_sequences))
+    longest_sequences = getShortLongSeqs(data_fasta, shortest=False)
+    output_content.extend(getSeqLengthContent(longest_sequences, "longest"))
+    shortest_sequences = getShortLongSeqs(data_fasta, shortest=True)
+    output_content.extend(getSeqLengthContent(shortest_sequences, "shortest"))
     writeOutputFile(output_content)
 
-def getSeqLengthContent(length_tuple) :
+def getSeqLengthContent(length_tuple, length_type="longest") :
     """
     """
-    return_list = ["----------", ]
-    for seq_id in length_tuple[1] :
+    return_list = ["----------",
+        (length_type + " sequence = {}".format(length_tuple[0])),
+        (length_type + " sequence count = {}".format(length_tuple[1])),
+        (length_type + " sequence ids:")]
+    for seq_id in length_tuple[2] :
         return_list.append(seq_id)
         
     return(return_list)
@@ -35,34 +43,45 @@ def getRecordCount(fasta_dat) :
     """
     return len(fasta_dat.keys())
     
-def getLongestSeqs(fasta_data) :
-    """ Returns a 2-tuple where the first elements is the length of the longest
-    sequence and the second element is a list of sequence ids of sequences
-    that have this longest length.
-    """
-    id_longest_seqs = []      # Store the ids of the longest seq's
-    length_longest_seq = -1   # Init length of longest sequence
-    for seq_id, dna_seq in sorted(fasta_data.items()) :
-        seq_len = len(fasta_data[seq_id])
-        print("seq_id:", seq_id, "\nhas length=seq_len")
-        # If this sequence is the longest we've seen so far, update
-        # length_longest_seq and reinit id_longest_seqs 
-        if(seq_len > length_longest_seq) :
-            length_longest_seq = seq_len
-            id_longest_seqs = [seq_id,]
-            print('new longest sequence =', seq_id, '\nhas length = ', seq_len)
-        elif(seq_len == length_longest_seq) :
-            id_longest_seqs.append(seq_id)
-            print('adding new seq to longest list:\n', seq_id)
-        # else - seq_len is smaller than existing value: just continue
-        
-    return((length_longest_seq, id_longest_seqs))
+def getShortLongSeqs(fasta_data, shortest=True) :
+    """ Returns a 3-tuple where the first elements is the length of the
+    shortest or longest sequence, the second element is the number of 
+    sequences that have the shortest or longest length, and the third element
+    is a list of sequence ids of sequences that have this shortest or longest
+    length.
     
-def getShortestSeqs(fasta_data) :
-    """ Returns a 2-tuple where the first elements is the length of the shortest
-    sequence and the second element is a tuple of sequence ids of sequences
-    that have this shortest length.
+    fasta_data - a dictionary with keys that are sequence ids and values that
+                 are sequences
+    shortest - boolean: If True, all outputs are with respect to the shortest
+               length sequence(s). If False, outputs are wrt to longest
+               length sequence(s).
     """
+    id_seqs = []      # Store the ids of the shortest or longest seq's
+    # Init length of shortest or longest sequence
+    length_seq = sys.maxsize if shortest else -sys.maxsize
+    for seq_id, dna_seq in sorted(fasta_data.items()) :
+        seq_len = len(fasta_data[seq_id])  # Get length of seq for this id
+        print("seq_id:", seq_id, "\nhas length=", seq_len)
+        # If this sequence is the shortest or longest we've seen so far,
+        # update length_seq and reinit id_seqs
+        if(shortest) :
+            if(seq_len < length_seq) :
+                length_seq = seq_len
+                id_seqs = [seq_id,]
+                print('new shortest sequence =', seq_id, '\nhas length = ', seq_len)
+            elif(seq_len == length_seq) :
+                id_seqs.append(seq_id)
+                print('adding new seq to shortest list:\n', seq_id)
+        else :
+            if(seq_len > length_seq) :
+                length_seq = seq_len
+                id_seqs = [seq_id,]
+                print('new longest sequence =', seq_id, '\nhas length = ', seq_len)
+            elif(seq_len == length_seq) :
+                id_seqs.append(seq_id)
+                print('adding new seq to longest list:\n', seq_id)
+            
+    return((length_seq, len(id_seqs), id_seqs))
 
 # test string
 # dna = "atgtaaatatgctagatgcccat"
