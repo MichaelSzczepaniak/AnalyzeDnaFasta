@@ -1,0 +1,12 @@
+input file = dna.example.fasta
+record count = 25
+----------
+longest sequence = 4805
+longest sequence count = 1
+longest sequence ids:
+gi|142022655|gb|EQ086233.1|323
+----------
+shortest sequence = 512
+shortest sequence count = 1
+shortest sequence ids:
+gi|142022655|gb|EQ086233.1|521

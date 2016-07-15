@@ -4,7 +4,7 @@ import numpy as np
 
 def main():
     """
-    dnaseqfasta.py dna.test01.fasta repseq.txt
+    run dnaseqfasta.py dna.test01.fasta repseq.txt
     """
     file_fasta = sys.argv[1]   # 1st arg should be the FASTA file
     file_repseq = sys.argv[2]  # 2nd arg should be the seq to check for repeats
@@ -17,6 +17,9 @@ def main():
     output_content.extend(getSeqLengthContent(longest_sequences, "longest"))
     shortest_sequences = getShortLongSeqs(data_fasta, shortest=True)
     output_content.extend(getSeqLengthContent(shortest_sequences, "shortest"))
+    
+    
+    
     writeOutputFile(output_content)
 
 def getSeqLengthContent(length_tuple, length_type="longest") :
@@ -151,6 +154,18 @@ def getOpenReadingFrames(dna, frame=0) :
     result_list = sorted(result_list, key=lambda tup: tup[2])
     
     return result_list
+
+def getShortLongestORFs(dna, want_shortest=True, frame=0) :
+    """ Returns the length of the shortest Open Reading Frame ORF if
+    want_shortest = True in dna. Otherwise, returns the longest ORF.
+    """
+    orfs = getOpenReadingFrames(dna, frame)
+    if want_shortest :
+        result = orfs[0][2]
+    else :
+        result = orfs[-1][2]
+        
+    return result
     
 # test string
 # dna = "atgtaaatatgctagatgcccat"
