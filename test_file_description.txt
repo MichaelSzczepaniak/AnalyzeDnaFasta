@@ -5,4 +5,7 @@ dna.test01.fasta   9 sequences: 2 with 8 triplets,         test getLongestSeq
                                 3 with 4 triplets, and     functions
                                 3 with 3 triplets
                                 
-dna.test01.fasta   tbd
+dna.test02.fasta   9 sequences: 3 with no ORF's,           detect ORF's in each
+                                2 ORFs in RF 1,            of the 3 reading
+                                2 ORFs in RF 2,            frames: 1, 2, or 3
+                                2 ORFs in RF 3
