@@ -21,16 +21,19 @@ def main():
     # Get the ORFs in each record of data
     output_content.append("----------")
     for seq_id in data_fasta.keys() :
+        print("**********START processing sequence = ", seq_id, " **********")
         output_content.append("sequence id = {}".format(seq_id))
         dna_seq = data_fasta[seq_id]
         for rf_offset in [0, 1, 2] :
             reading_frame = rf_offset + 1
-            orfs = getOpenReadingFrames(dna_seq, rf_offset)
+            print("   >>>>>>> READING FRAME = ", reading_frame, " <<<<<<<")
+            orfs = getOpenReadingFrames(dna_seq, reading_frame)
             output_content.append("  number of ORF{}s = ".format(reading_frame))
             for orf in orfs :
                 output_content.append("  length = {}, start = {}".format(orf[2], orf[0]))
             output_content.append("  ***")
         output_content.append("----------")
+        print("**********END processing sequence = ", seq_id, " **********")
     
     writeOutputFile(output_content)
 
@@ -118,8 +121,7 @@ def getNextCodonIndex(dna, start_index=0, find_start_codon=True,
     
     dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
           can be upper or lower case
-    start_index - int, 1 - (reading frame), Python index to start sequence
-          reads
+    start_index - int, Python index to start sequence reads
     find_start_codon - boolean. If start_codon==False and nothing is passed
     in for check_codons, then the first index of a stop codon that is after
     start_index is returned.
@@ -132,52 +134,59 @@ def getNextCodonIndex(dna, start_index=0, find_start_codon=True,
 
     codon_type = "START"
     if not find_start_codon :
-        if set(check_codons) == set(('tga', 'tag', 'taa')) :
+        if set(check_codons) == set(('TAA', 'TAG', 'TGA')) :
+            codon_type = "STOP"
+        elif set(check_codons) == set(('taa', 'tag', 'tga')) :
             codon_type = "STOP"
         else :
             codon_type = "CUSTOM"
-    if find_start_codon : check_codons = ['atg', ]
+    if find_start_codon : check_codons = ['atg', ] # Look for start codon index
     next_start_index = -1
     for i in range(start_index, len(dna), 3) :
         codon = dna[i:i+3].lower()
-        print("i=", i, ", codon=", codon, "|")
+        print("  i=", i, ", codon=", codon, "|")
         if codon in check_codons :
-            print(codon_type, "CODON found!\n")
+            print("  ", codon_type, "CODON found!\n")
             next_start_index = i
             break
         else :
-            print(codon_type, "codon NOT found...\n")
+            print("  ", codon_type, "codon NOT found...\n")
     
     return next_start_index
 
-def getOpenReadingFrames(dna, reading_frame=1) :
+def getOpenReadingFrames(raw_dna, reading_frame=1) :
     """ Returns a list called orfs_list containing 3-tuples. Each tuple
     corresponds to an Open Reading Frame (ORF) where:
     tuple[0] = index of start codon
     tuple[1] = index of stop codon
     tuple[2] = length of the ORF
     
-    dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
-          can be upper or lower case
+    raw_dna - string, rep'n of DNA sequence of A's, T's, G's and C's
+          which can be upper or lower case
     reading_frame - int, valid values: 1, 2, or 3 corresponding to reading
           frames 1, 2, or 3 respespectively to be used in reading dna string
     
     orfs_list is sorted by tuple[2] (ORF length) ascending order
     """
+    dna = raw_dna[reading_frame-1:]  # Read only bases in the reading frame
     orfs_list = []
-    reading_index = reading_frame - 1  # Python indices are 0-based
-    start_codon_index = getNextCodonIndex(dna, reading_index)
-    while start_codon_index > -1 :
-        stop_codon_index = getNextCodonIndex(dna, start_codon_index + 3, False)
-        if stop_codon_index > -1 :
-            orf_length = stop_codon_index + 3 - start_codon_index
+    start_codon_python_index = getNextCodonIndex(dna) # Start at beginning
+    while start_codon_python_index > -1 :
+        stop_codon_python_index = \
+        getNextCodonIndex(dna, start_codon_python_index + 3, False)
+        if stop_codon_python_index > -1 :
+            orf_length = stop_codon_python_index + 3 - start_codon_python_index
+            # Create returned tuples as 1-based indices.
+            start_codon_index = start_codon_python_index + 1
+            stop_codon_index = stop_codon_python_index + 1
             orf_record = (start_codon_index, stop_codon_index, orf_length)
             orfs_list.append(orf_record)
-            print("*********** adding tuple:", orf_record, " ***********\n")
+            print("  *********** adding tuple:", orf_record, " ***********\n")
         else :
             break  # No more stop codons following start codons: exit
         # Look for next start codon.
-        start_codon_index = getNextCodonIndex(dna, start_codon_index + 3)
+        start_codon_python_index = \
+        getNextCodonIndex(dna, start_codon_python_index + 3)
     # Sort list by third element in tuple: (how does lambda thingy work?...)
     # http://stackoverflow.com/questions/3121979/how-to-sort-list-tuple-of-lists-tuples
     orfs_list = sorted(orfs_list, key=lambda tup: tup[2])
