@@ -5,6 +5,7 @@ import numpy as np
 def main():
     """
     run dnaseqfasta.py dna.test01.fasta repseq.txt
+    run dnaseqfasta.py dna.test02.fasta repseq.txt
     """
     file_fasta = sys.argv[1]   # 1st arg should be the FASTA file
     file_repseq = sys.argv[2]  # 2nd arg should be the seq to check for repeats
@@ -17,13 +18,27 @@ def main():
     output_content.extend(getSeqLengthContent(longest_sequences, "longest"))
     shortest_sequences = getShortLongSeqs(data_fasta, shortest=True)
     output_content.extend(getSeqLengthContent(shortest_sequences, "shortest"))
-    
-    
+    # Get the ORFs in each record of data
+    output_content.append("----------")
+    for seq_id in data_fasta.keys() :
+        output_content.append("sequence id = {}".format(seq_id))
+        dna_seq = data_fasta[seq_id]
+        for rf_offset in [0, 1, 2] :
+            reading_frame = rf_offset + 1
+            orfs = getOpenReadingFrames(dna_seq, rf_offset)
+            output_content.append("  number of ORF{}s = ".format(reading_frame))
+            for orf in orfs :
+                output_content.append("  length = {}, start = {}".format(orf[2], orf[0]))
+            output_content.append("  ***")
+        output_content.append("----------")
     
     writeOutputFile(output_content)
 
 def getSeqLengthContent(length_tuple, length_type="longest") :
-    """
+    """ Returns a list of strings which describe the results of
+    computing the longest and shortest sequences.
+    
+    length_tuple - the 3 tuple returned from getShortLongSeqs
     """
     return_list = ["----------",
         (length_type + " sequence = {}".format(length_tuple[0])),
@@ -34,8 +49,11 @@ def getSeqLengthContent(length_tuple, length_type="longest") :
         
     return(return_list)
     
-def writeOutputFile(content_list) :
-    outfile = open('dnaFastaAnalysis.txt', 'w')
+def writeOutputFile(content_list, outputFileName='dnaFastaAnalysis.txt') :
+    """ Writes item in content_list as a line to the file
+    named outputFileName
+    """
+    outfile = open(outputFileName, 'w')
     for line in content_list :
         print(line, file = outfile, end = '\n')
     outfile.close()
@@ -47,11 +65,12 @@ def getRecordCount(fasta_dat) :
     return len(fasta_dat.keys())
     
 def getShortLongSeqs(fasta_data, shortest=True) :
-    """ Returns a 3-tuple where the first elements is the length of the
-    shortest or longest sequence, the second element is the number of 
-    sequences that have the shortest or longest length, and the third element
-    is a list of sequence ids of sequences that have this shortest or longest
-    length.
+    """ Find the length of longest or shortest sequence.
+    Returns a 3-tuple where:
+    tuple[0] - length of the shortest or longest sequence
+    tuple[1] - number of sequences that have the shortest or longest length
+    tuple[2] - list of sequence ids of sequences that have this shortest or
+               longest length.
     
     fasta_data - a dictionary with keys that are sequence ids and values that
                  are sequences
@@ -61,7 +80,7 @@ def getShortLongSeqs(fasta_data, shortest=True) :
     """
     id_seqs = []      # Store the ids of the shortest or longest seq's
     # Init length of shortest or longest sequence
-    length_seq = sys.maxsize if shortest else -sys.maxsize
+    length_seq = sys.maxsize if shortest else -1
     for seq_id, dna_seq in sorted(fasta_data.items()) :
         seq_len = len(fasta_data[seq_id])  # Get length of seq for this id
         #print("seq_id:", seq_id, "\nhas length=", seq_len)
@@ -97,8 +116,13 @@ def getNextCodonIndex(dna, start_index=0, find_start_codon=True,
     """ Returns the next index in dna starting from start_index that is a
     start codon (i.e. ATG or atg) if find_start_codon==True (default).
     
-    If start_codon==False and nothing is passed in for check_codons, then
-    the first index of a stop codon that is after start_index is returned.
+    dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
+          can be upper or lower case
+    start_index - int, 1 - (reading frame), Python index to start sequence
+          reads
+    find_start_codon - boolean. If start_codon==False and nothing is passed
+    in for check_codons, then the first index of a stop codon that is after
+    start_index is returned.
     
     If start_codon==False and a check_codons list is passed in, then the
     first index of a codon that matches any check_codons element is returned.
@@ -125,25 +149,30 @@ def getNextCodonIndex(dna, start_index=0, find_start_codon=True,
             print(codon_type, "codon NOT found...\n")
     
     return next_start_index
-        
-    
-def getOpenReadingFrames(dna, frame=0) :
-    """ Returns a list called result_list containing 3-tuples. Each tuple
+
+def getOpenReadingFrames(dna, reading_frame=1) :
+    """ Returns a list called orfs_list containing 3-tuples. Each tuple
     corresponds to an Open Reading Frame (ORF) where:
     tuple[0] = index of start codon
     tuple[1] = index of stop codon
     tuple[2] = length of the ORF
     
-    result_list is sorted by tuple[2] (ORF length) ascending order
+    dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
+          can be upper or lower case
+    reading_frame - int, valid values: 1, 2, or 3 corresponding to reading
+          frames 1, 2, or 3 respespectively to be used in reading dna string
+    
+    orfs_list is sorted by tuple[2] (ORF length) ascending order
     """
-    result_list = []
-    start_codon_index = getNextCodonIndex(dna, 0)
+    orfs_list = []
+    reading_index = reading_frame - 1  # Python indices are 0-based
+    start_codon_index = getNextCodonIndex(dna, reading_index)
     while start_codon_index > -1 :
         stop_codon_index = getNextCodonIndex(dna, start_codon_index + 3, False)
         if stop_codon_index > -1 :
             orf_length = stop_codon_index + 3 - start_codon_index
             orf_record = (start_codon_index, stop_codon_index, orf_length)
-            result_list.append(orf_record)
+            orfs_list.append(orf_record)
             print("*********** adding tuple:", orf_record, " ***********\n")
         else :
             break  # No more stop codons following start codons: exit
@@ -151,15 +180,19 @@ def getOpenReadingFrames(dna, frame=0) :
         start_codon_index = getNextCodonIndex(dna, start_codon_index + 3)
     # Sort list by third element in tuple: (how does lambda thingy work?...)
     # http://stackoverflow.com/questions/3121979/how-to-sort-list-tuple-of-lists-tuples
-    result_list = sorted(result_list, key=lambda tup: tup[2])
+    orfs_list = sorted(orfs_list, key=lambda tup: tup[2])
     
-    return result_list
+    return orfs_list
 
-def getShortLongestORFs(dna, want_shortest=True, frame=0) :
+def getShortLongestORFs(dna, want_shortest=True, reading_frame=1) :
     """ Returns the length of the shortest Open Reading Frame ORF if
     want_shortest = True in dna. Otherwise, returns the longest ORF.
+    dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
+          can be upper or lower case
+    reading_frame - int, valid values: 1, 2, or 3 corresponding to reading
+          frames 1, 2, or 3 respespectively to be used in reading dna string
     """
-    orfs = getOpenReadingFrames(dna, frame)
+    orfs = getOpenReadingFrames(dna, reading_frame)
     if want_shortest :
         result = orfs[0][2]
     else :
@@ -172,20 +205,22 @@ def getShortLongestORFs(dna, want_shortest=True, frame=0) :
 #        01234567890123456789012
 #           *        *
 # expected list: [3, 12]
-def get_stop_codons(dna, frame=0) :
+def get_stop_codons(dna, reading_frame=1) :
     """
     Returns a list of integers that are the indices of stop codons present
     in the string dna.
     
     dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
           can be upper or lower case
-    frame - int, valid values: 0, 1, or 2 corresponding to reading frames
-            1, 2, or 3 respespectively to be used in reading dna string
-    checks if given dna sequence contains a stop codon
+    reading_frame - int, valid values: 1, 2, or 3 corresponding to reading
+          frames 1, 2, or 3 respespectively to be used in reading dna string
+    
+    Function checks if given dna sequence contains a stop codon
     """
     stop_codons_found = []
     stop_codons=['tga', 'tag', 'taa'] # nomalize to lower case
-    for i in range(frame, len(dna), 3) :
+    reading_index = reading_frame - 1
+    for i in range(reading_index, len(dna), 3) :
         codon = dna[i:i+3].lower()  # codon triplet to check
         if codon in stop_codons :
             if stop_codons_found[0] < 0 :
@@ -205,7 +240,7 @@ def readFasta(inFilePath=".\dna.example.fasta") :
     
     Keyword aguments:
     inFilePath -- path to the FASTA file to be read
-                  (default dna.example.fasts in current dir)
+                  (default dna.example.fasta in current dir)
     """
     try:
         f = open(inFilePath)
