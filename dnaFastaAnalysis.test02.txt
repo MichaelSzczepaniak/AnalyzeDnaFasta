@@ -12,89 +12,89 @@ shortest sequence ids:
 test08
 ----------
 sequence id = test07
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   length = 15, start = 1
   length = 15, start = 19
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   ***
 ----------
 sequence id = test02
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   length = 9, start = 13
   length = 18, start = 4
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   length = 24, start = 7
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   ***
 ----------
 sequence id = test04
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   length = 15, start = 13
   length = 24, start = 4
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   ***
 ----------
 sequence id = test09
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   length = 9, start = 10
   length = 12, start = 22
   length = 15, start = 4
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   ***
 ----------
 sequence id = test03
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   length = 12, start = 10
   length = 15, start = 7
   ***
 ----------
 sequence id = test06
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   length = 12, start = 19
   length = 12, start = 31
   length = 24, start = 7
   ***
 ----------
 sequence id = test01
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   ***
 ----------
 sequence id = test08
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   ***
 ----------
 sequence id = test05
-  number of ORF1s = 
+  ORFs in reading frame 1: 
   ***
-  number of ORF2s = 
+  ORFs in reading frame 2: 
   ***
-  number of ORF3s = 
+  ORFs in reading frame 3: 
   ***
 ----------

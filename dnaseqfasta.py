@@ -28,7 +28,7 @@ def main():
             reading_frame = rf_offset + 1
             print("   >>>>>>> READING FRAME = ", reading_frame, " <<<<<<<")
             orfs = getOpenReadingFrames(dna_seq, reading_frame)
-            output_content.append("  number of ORF{}s = ".format(reading_frame))
+            output_content.append("  ORFs in reading frame {}: ".format(reading_frame))
             for orf in orfs :
                 output_content.append("  length = {}, start = {}".format(orf[2], orf[0]))
             output_content.append("  ***")
