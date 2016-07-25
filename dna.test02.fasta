@@ -1,18 +1,18 @@
->test01|123456789|no orfs in any reading frame
+>test01 |123456789|no orfs in any reading frame
 TCGGGCGAAGGCGGCAGCTCGGGCGAAGGCGGCAGC
->test02|123456789|2-orf1s short=9 from 13 to 21, long=18 from 4 to 21, 1-orf2s long=short=24 from 7 to 30
+>test02 |123456789|2-orf1s short=9 from 13 to 21, long=18 from 4 to 21, 1-orf2s long=short=24 from 7 to 30
 AATATGGATGATATGGGATGAAAGGGAGTAGTTGTT
->test03|123456789|1-orf3 short=12 from 10 to 21, long=15 from 7 to 21
+>test03 |123456789|1-orf3 short=12 from 10 to 21, long=15 from 7 to 21
 TAAATAGGATGATGAAGTTATAGGTGAGT
->test04|123456789|3-orf2s short=15 from 13 to 27, long=24 from 4 to 27
+>test04 |123456789|3-orf2s short=15 from 13 to 27, long=24 from 4 to 27
 TGGGATGGTGCTGATGCCGTTGCGGTGA
->test05|123456789|no orfs in any reading frame
-TAATAATAGTACTAAGGTTTTCGGGCGAAGGCGGCAGCTCGGGCGAAGGCGGCAGC
->test06|123456789|4-orf3s short=12 from 19 to 30 and 31 to 42, long=24 from 7 to 30
+>test05 |123456789|no orfs in any reading frame
+TAATAATAGTACTAAGGTTTTCGGGCGAAGGCGGCAGCTCGGGCGAAGGCGGCAGCT
+>test06 |123456789|4-orf3s short=12 from 19 to 30 and 31 to 42, long=24 from 7 to 30
 GTAGGTGGATGTTGGGTCCTATGCGGGCCTGAAGTAAACCCTAG
->test07|123456789|1-orf2 short=long=15 from 1 to 15 and 19 to 33
+>test07 |123456789|1-orf2 short=long=15 from 1 to 15 and 19 to 33
 TATGGCTAACGGTTAACCGATGTTTAAAGTGTAGCCG
->test08|123456789|no orfs in any reading frame
+>test08 |123456789|no orfs in any reading frame
 AAGTAGTTGCCCTGATGTTAAGGATTA
->test09|123456789|3 orf1 short=9 from 10 to 18, long=15 from 4 to 18
+>test09 |123456789|3 orf1 short=9 from 10 to 18, long=15 from 4 to 18
 GGTATGGGGATGATTTAGTTGATGGCGATCTGA
