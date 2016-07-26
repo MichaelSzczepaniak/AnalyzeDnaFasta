@@ -19,7 +19,9 @@ def main():
     shortest_sequences = getShortLongSeqs(data_fasta, shortest=True)
     output_content.extend(getSeqLengthContent(shortest_sequences, "shortest"))
     # Get the ORFs in each record of data
+    longest_orf_length = -1
     output_content.append("----------")
+    longest_seq_ids = set()
     for seq_id in data_fasta.keys() :
         print("**********START processing sequence = ", seq_id, " **********")
         output_content.append("sequence id = {}".format(seq_id))
@@ -28,12 +30,26 @@ def main():
             reading_frame = rf_offset + 1
             print("   >>>>>>> READING FRAME = ", reading_frame, " <<<<<<<")
             orfs = getOpenReadingFrames(dna_seq, reading_frame)
-            output_content.append("  ORFs in reading frame {}: ".format(reading_frame))
+            output_content.append("  ORFs in reading frame {}: ".\
+            format(reading_frame))
             for orf in orfs :
-                output_content.append("  length = {}, start = {}".format(orf[2], orf[0]))
+                if orf[2] > longest_orf_length :
+                    longest_orf_length = orf[2]
+                    longest_seq_ids = set([seq_id, ])  # Found longer seq, 
+                                                       # create new set
+                elif orf[2] == longest_orf_length :
+                    longest_seq_ids.add(seq_id)
+                output_content.append("  length = {}, start = {}".\
+                format(orf[2], orf[0]))
             output_content.append("  ***")
         output_content.append("----------")
         print("**********END processing sequence = ", seq_id, " **********")
+    
+    output_content.append("+++++++++++++++++++++++++++++++++++++++++++++++++")
+    output_content.append("LENGTH OF LONGEST ORF = {}".\
+    format(longest_orf_length))
+    output_content.append("SEQUENCE IDS OF LONGEST: {}".\
+    format(longest_seq_ids))
     
     writeOutputFile(output_content)
 
