@@ -98,3 +98,6 @@ sequence id = test05
   ORFs in reading frame 3: 
   ***
 ----------
++++++++++++++++++++++++++++++++++++++++++++++++++
+LENGTH OF LONGEST ORF = 24
+SEQUENCE IDS OF LONGEST: {'test02', 'test04', 'test06'}
