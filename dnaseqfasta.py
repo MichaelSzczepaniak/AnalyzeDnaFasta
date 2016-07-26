@@ -1,13 +1,12 @@
 #!/usr/bin/python3
-import sys, read_fasta as rfa #, dna_nrepeats as nreps
+import sys, read_fasta as rfa, dna_nrepeats as nreps
 
 def main():
     """
-    run dnaseqfasta.py dna.test01.fasta repseq.txt
-    run dnaseqfasta.py dna.test02.fasta repseq.txt
+    run dnaseqfasta.py dna.test02.fasta 2
     """
-    file_fasta = sys.argv[1]   # 1st arg should be the FASTA file
-    file_repseq = sys.argv[2]  # 2nd arg should be the seq to check for repeats
+    file_fasta = sys.argv[1]     # 1st arg should be the FASTA file
+    n_repeat = int(sys.argv[2])  # 2nd arg should be the length of repeats
     data_fasta = rfa.readFasta(file_fasta)
     record_count = getRecordCount(data_fasta)
     input_line = "input file = {}".format(file_fasta)
@@ -49,6 +48,35 @@ def main():
     format(longest_orf_length))
     output_content.append("SEQUENCE IDS OF LONGEST: {}".\
     format(longest_seq_ids))
+    
+    # locate repeats of size n
+    output_content.append("++++++++++++ Repeats of size n={} ++++++++++++++".\
+    format(n_repeat))
+    longest_n_sub = "UNASSIGNED"
+    longest_n_sub_count = -1
+    longest_n_sub_locations = []
+    for seq_id in data_fasta.keys() :
+        output_content.append(">>> seq id = {} <<<".format(seq_id))
+        dna = data_fasta[seq_id]
+        repeats = nreps.getNRepeats(dna, n_repeat)
+        for key, value in repeats.items() :
+            if len(value) > longest_n_sub_count :
+                longest_n_sub = key
+                longest_n_sub_count = len(value)
+                longest_n_sub_locations = value
+            elif len(value) == longest_n_sub_count :
+                longest_n_sub += ", \n" + key
+                longest_n_sub_locations.append(value)
+            output_content.append("     subseq = {}".format(key))
+            output_content.append("     count = {}".format(len(value)))
+            output_content.append("     locations = {}".format(value))
+    
+    output_content.append("+++++++++++++++++++++++++++++++++++++++++++++++++")
+    output_content.append("Most frequent repeat of length {} is:".format(n_repeat))
+    output_content.append(longest_n_sub)
+    output_content.append("with a count of {} with locations:".format(longest_n_sub_count))
+    for i in range(0, len(longest_n_sub_locations)) :
+        output_content.append(longest_n_sub_locations[i])
     
     writeOutputFile(output_content)
 

@@ -27,7 +27,7 @@ def getNRepeats(dna, n=2, values_as_locations=True) :
             subdna = dna[j:j+n]
             if key == subdna :
                 if values_as_locations :
-                    repeats[key].append(j)
+                    repeats[key].append(j+1) # convert to 1-based indices
                 else :
                     repeats[key] += 1
                 
