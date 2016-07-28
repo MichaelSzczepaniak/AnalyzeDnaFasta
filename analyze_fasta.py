@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 import sys, argparse
-import read_fasta as rf, dna_nrepeats as nreps
+import read_fasta as rf, dna_orfs as orf, dna_nrepeats as nreps
 
 def main() :
     """
     Example of how to execute:
-    From command line:  python analyze_fasta.py --option
-    From ipython shell: run analyze_fasta.py --option
+    From command line:  python analyze_fasta.py <fasta file> --option
+    From ipython shell: run analyze_fasta.py <fasta file> --option
     where option can be:
     record_count - to return the number of records in the input FASTA file
     longest_seq - to return the length of the longest sequence in the input
@@ -25,6 +25,11 @@ def main() :
     help="Return the length of the longest sequence in the input FASTA file")
     parser.add_argument("--shortest_seq", action='store_true',
     help="Return the length of the longest sequence in the input FASTA file")
+    
+    parser.add_argument("--longest_orf", type=int, nargs=1,
+    help="Return the longest open reading frame (ORF) for reading frames \
+    1, 2, 3, or all (0)")
+    
     args = parser.parse_args()
     if args.filename :
         data_fasta = rf.readFasta(file_fasta)  # Always read the FASTA file.
@@ -35,9 +40,32 @@ def main() :
     if args.record_count :
         print("Record count = {}".format(getRecordCount(data_fasta)))
     elif args.longest_seq :
-        print(getShortLongSeqs(data_fasta, shortest=False))
+        long_seq = getShortLongSeqs(data_fasta, shortest=False)
+        print("                 Length of longest sequence = {}".\
+        format(long_seq[0]))
+        print("Count of sequences that have longest length = {}".\
+        format(len(long_seq[2])))
+        print("Sequences with longest length:")
+        for seq in long_seq[2] :
+            print(seq)
     elif args.shortest_seq :
-        print(getShortLongSeqs(data_fasta, shortest=True))
+        short_seq = getShortLongSeqs(data_fasta, shortest=True)
+        print("                 Length of shortest sequence = {}".\
+        format(short_seq[0]))
+        print("Count of sequences that have shortest length = {}".\
+        format(len(short_seq[2])))
+        print("Sequences with longest length:")
+        for seq in short_seq[2] :
+            print(seq)
+    elif args.longest_orf :
+        rframe = args.longest_orf[0]
+        lorf = orf.getShortLongestORFsInAll(data_fasta, False, rframe)
+        if rframe in (1, 2, 3) :
+            print("longest orf in reading frame {} = {}".format(rframe, lorf))
+        elif rframe == 0 :
+            print("longest orf in all reading frames = {}".format(lorf))
+        else :
+            print("Reading frame parameter must be 1, 2, 3, or 0!")
     else :
         print("Unimplemented option... TODO")
 
