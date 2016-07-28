@@ -3,7 +3,7 @@ import sys, read_fasta as rfa, dna_nrepeats as nreps
 
 def main():
     """
-    run dnaseqfasta.py dna.test02.fasta 2
+    run dnaseqfasta.py dna2.fasta 6
     """
     file_fasta = sys.argv[1]     # 1st arg should be the FASTA file
     n_repeat = int(sys.argv[2])  # 2nd arg should be the length of repeats
@@ -17,35 +17,39 @@ def main():
     shortest_sequences = getShortLongSeqs(data_fasta, shortest=True)
     output_content.extend(getSeqLengthContent(shortest_sequences, "shortest"))
     # Get the ORFs in each record of data
-    longest_orf_length = -1
+    longest_orf_length = [-1, -1, -1]  # for reading frames 1, 2, 3
     output_content.append("----------")
     longest_seq_ids = set()
     for seq_id in data_fasta.keys() :
-        print("**********START processing sequence = ", seq_id, " **********")
+        #print("**********START processing sequence = ", seq_id, " **********")
         output_content.append("sequence id = {}".format(seq_id))
         dna_seq = data_fasta[seq_id]
         for rf_offset in [0, 1, 2] :
             reading_frame = rf_offset + 1
-            print("   >>>>>>> READING FRAME = ", reading_frame, " <<<<<<<")
+            #print("   >>>>>>> READING FRAME = ", reading_frame, " <<<<<<<")
             orfs = getOpenReadingFrames(dna_seq, reading_frame)
             output_content.append("  ORFs in reading frame {}: ".\
             format(reading_frame))
             for orf in orfs :
-                if orf[2] > longest_orf_length :
-                    longest_orf_length = orf[2]
+                if orf[2] > longest_orf_length[rf_offset] :
+                    longest_orf_length[rf_offset] = orf[2]
                     longest_seq_ids = set([seq_id, ])  # Found longer seq, 
                                                        # create new set
-                elif orf[2] == longest_orf_length :
+                elif orf[2] == longest_orf_length[rf_offset] :
                     longest_seq_ids.add(seq_id)
                 output_content.append("  length = {}, start = {}".\
-                format(orf[2], orf[0]))
+                format(orf[2], orf[0]+rf_offset))  # add back offset
             output_content.append("  ***")
         output_content.append("----------")
-        print("**********END processing sequence = ", seq_id, " **********")
+        #print("**********END processing sequence = ", seq_id, " **********")
     
     output_content.append("+++++++++++++++++++++++++++++++++++++++++++++++++")
-    output_content.append("LENGTH OF LONGEST ORF = {}".\
-    format(longest_orf_length))
+    output_content.append("LENGTH OF LONGEST ORF reading frame 1 = {}".\
+    format(longest_orf_length[0]))
+    output_content.append("LENGTH OF LONGEST ORF reading frame 2 = {}".\
+    format(longest_orf_length[1]))
+    output_content.append("LENGTH OF LONGEST ORF reading frame 3 = {}".\
+    format(longest_orf_length[2]))
     output_content.append("SEQUENCE IDS OF LONGEST: {}".\
     format(longest_seq_ids))
     
@@ -53,6 +57,7 @@ def main():
     output_content.append("++++++++++++ Repeats of size n={} ++++++++++++++".\
     format(n_repeat))
     longest_n_sub = "UNASSIGNED"
+    longest_n_sub_seq = "UNASSIGNED"
     longest_n_sub_count = -1
     longest_n_sub_locations = []
     for seq_id in data_fasta.keys() :
@@ -61,10 +66,12 @@ def main():
         repeats = nreps.getNRepeats(dna, n_repeat)
         for key, value in repeats.items() :
             if len(value) > longest_n_sub_count :
+                longest_n_sub_seq = seq_id
                 longest_n_sub = key
                 longest_n_sub_count = len(value)
                 longest_n_sub_locations = value
             elif len(value) == longest_n_sub_count :
+                longest_n_sub_seq += ", \n" + seq_id
                 longest_n_sub += ", \n" + key
                 longest_n_sub_locations.append(value)
             output_content.append("     subseq = {}".format(key))
@@ -73,10 +80,24 @@ def main():
     
     output_content.append("+++++++++++++++++++++++++++++++++++++++++++++++++")
     output_content.append("Most frequent repeat of length {} is:".format(n_repeat))
-    output_content.append(longest_n_sub)
+    output_content.append("{} in sequences:".format(longest_n_sub))
+    output_content.append(longest_n_sub_seq)
     output_content.append("with a count of {} with locations:".format(longest_n_sub_count))
     for i in range(0, len(longest_n_sub_locations)) :
         output_content.append(longest_n_sub_locations[i])
+    
+    # Q10 Which one of the following repeats of length 7 has a maximum number
+    # of occurrences?
+    output_content.append("++++++++++++ Question 10 ++++++++++++++".\
+    format(n_repeat))
+    q10repeats = ["TGCGCGC", "GCGGCCG", "CGCGCCG", "CATCGCC"]
+    q10results = {q10repeats[0]: 0, q10repeats[1]: 0, q10repeats[2]: 0,
+                  q10repeats[3]: 0}
+    for repeat in q10repeats :
+        count = getAllOccsOfRepeat(data_fasta, repeat)
+        q10results[repeat] = count
+        output_content.append("{} has {} instances".format(repeat, count))
+    
     
     writeOutputFile(output_content)
 
@@ -187,13 +208,13 @@ def getNextCodonIndex(dna, start_index=0, find_start_codon=True,
     next_start_index = -1
     for i in range(start_index, len(dna), 3) :
         codon = dna[i:i+3].lower()
-        print("  i=", i, ", codon=", codon, "|")
+        #print("  i=", i, ", codon=", codon, "|")
         if codon in check_codons :
-            print("  ", codon_type, "CODON found!\n")
+            #print("  ", codon_type, "CODON found!\n")
             next_start_index = i
             break
-        else :
-            print("  ", codon_type, "codon NOT found...\n")
+        #else :
+            #print("  ", codon_type, "codon NOT found...\n")
     
     return next_start_index
 
@@ -224,7 +245,7 @@ def getOpenReadingFrames(raw_dna, reading_frame=1) :
             stop_codon_index = stop_codon_python_index + 1
             orf_record = (start_codon_index, stop_codon_index, orf_length)
             orfs_list.append(orf_record)
-            print("  *********** adding tuple:", orf_record, " ***********\n")
+            #print("  *********** adding tuple:", orf_record, " ***********\n")
         else :
             break  # No more stop codons following start codons: exit
         # Look for next start codon.
@@ -284,4 +305,4 @@ def get_stop_codons(dna, reading_frame=1) :
             
     return stop_codons_found
     
-if __name__ == "__main__": main()  # allow func calls before def's
+if __name__ == "__main__": main()  # Load module and run main().

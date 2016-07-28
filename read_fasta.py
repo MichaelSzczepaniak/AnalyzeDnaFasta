@@ -19,7 +19,7 @@ def readFasta(inFilePath=".\dna.example.fasta") :
     dnaSeqs = {}    # init empty dict
     for line in f:  # iterate thru lines in file
         line = line.rstrip()       # remove trailing (right) white space (\n)
-        if line.startswith('>') :  # Are we on a header line?
+        if line.startswith('>') :  # header line? Could also use line =='>'
             words = line.split()   # Split on space
             name = words[0][1:]    # Use everything right of > as dict key
             dnaSeqs[name] = ''     # Add new key to dict (assign value later)

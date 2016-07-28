@@ -32,3 +32,35 @@ def getNRepeats(dna, n=2, values_as_locations=True) :
                     repeats[key] += 1
                 
     return repeats
+    
+def getOccsOfRepeatInSingleSeq(dna_seq, repeat) :
+    """ Returns an integer which is the number of occurance of repeat
+    in dna_seq
+    """
+    all_repeats = getNRepeats(dna, len(repeat), False)
+    occurances = all_repeats.get(repeat, 0)
+    
+    return occurances
+    
+def getOccsOfRepeatInAllSeqs(dna_seqs, repeat) :
+    """ Returns a dictionary with keys that are the keys of dna_seqs and
+    values that are integers which are the number of occurance of repeat
+    in each of the sequences in dna_seqs
+    """
+    result = {}
+    for sid, dna in dna_seqs.items() :
+        result[sid] = getMaxOccOfRepeatInSingleSeq(dna, repeat)
+        
+    return result
+    
+def getAllOccsOfRepeat(dna_seqs, repeat) :
+    """ Returns an integer that's the count of all instance of repeat
+    in each sequence of dna_seqs.
+    """
+    result = 0
+    repeats_in_all_seqs = getOccsOfRepeatInAllSeqs(dna_seqs, repeat)
+    for count in repeats_in_all_seqs.values() :
+        result += count
+    
+    return result
+    
