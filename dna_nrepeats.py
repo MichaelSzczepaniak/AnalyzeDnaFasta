@@ -34,14 +34,13 @@ def getNRepeats(dna, n=2, values_are_counts=True) :
                 
     return repeats
     
-def getMostFrequentRepeatN(dna_seqs, nrep) :
-    """ Returns a string that is the most frequently occuring repeat
-    of size nrep.
+def getFirstMostFrequentRepeatN(dna_seqs, nrep) :
+    """ Returns a string that is the first instance of the most frequently
+    occuring repeat of size nrep.
     
     dna_seqs - Dictionary where keys = sequence identifiers and values =
     DNA seqeunce for that record.
     nrep - Size of the repeat to search on.
-    
     """
     longest_n_repeat = ""
     longest_n_sub_count = -1
@@ -54,7 +53,30 @@ def getMostFrequentRepeatN(dna_seqs, nrep) :
                 longest_n_repeat = nrepeat
     
     return longest_n_repeat
+
+def getAllMostFrequentRepeatN(dna_seqs, nreps) :
+    """ Returns a 2-tuple where:
+    tuple[0] = list of strings that are all the instances of the most
+               frequently occuring repeats of size nrep.
+    tuple[1] = integer number of occurances of the repeats in tuple[0]
     
+    dna_seqs - Dictionary where keys = sequence identifiers and values =
+    DNA seqeunce for that record.
+    nrep - Size of the repeat to search on.
+    """
+    longest_n_repeats = []
+    longest_n_sub_count = -1
+    for seq_id in dna_seqs.keys() :
+        dna = dna_seqs[seq_id]
+        repeats = getNRepeats(dna, nreps)  # Get all repeats size n.
+        for nrepeat, nrep_count in repeats.items() :
+            if nrep_count > longest_n_sub_count :
+                longest_n_sub_count = nrep_count
+                longest_n_repeats = [nrepeat, ]
+            elif nrep_count == longest_n_sub_count :
+                longest_n_repeats.append(nrepeat)
+    
+    return (longest_n_repeats, longest_n_sub_count)
     
 def getOccsOfRepeatInSingleSeq(dna, repeat) :
     """ Returns an integer which is the number of occurance of repeat

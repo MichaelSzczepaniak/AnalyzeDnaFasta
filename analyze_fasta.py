@@ -34,6 +34,10 @@ def main() :
     parser.add_argument("--mfrepeat_occurs", type=int, nargs=1,
     help="Return the most frequently occuring repeat of size n")
     
+    parser.add_argument("--get_max_nrepeats", type=int, nargs=1,
+    help="Return all repeats of size n that have the highest frequency of \
+    occurance")
+    
     args = parser.parse_args()
     if args.filename :
         data_fasta = rf.readFasta(file_fasta)  # Always read the FASTA file.
@@ -101,11 +105,24 @@ def main() :
         except:
             print("Size of repeat could not be interpretted as a digit.")
             sys.exit(0)
-        mf_repeat = nreps.getMostFrequentRepeatN(data_fasta, n)
-        print("Most frequently occuring repeat of size {} is {}".format(n, mf_repeat))
+        mf_repeat = nreps.getFirstMostFrequentRepeatN(data_fasta, n)
+        print("First instance of most frequently occuring repeat of size \
+        {} is {}".format(n, mf_repeat))
         mf_repeat_count = nreps.getAllOccsOfRepeat(data_fasta, mf_repeat)
         print("Repeat {} occurs a total of {} times in the input FASTA file.".\
         format(mf_repeat, mf_repeat_count))
+    elif args.get_max_nrepeats :
+        try :
+            n = int(args.get_max_nrepeats[0])
+        except:
+            print("Size of repeat could not be interpretted as a digit.")
+            sys.exit(0)
+        mf_repeats = nreps.getAllMostFrequentRepeatN(data_fasta, n)
+        print("Size {} repeats that occur with the highest frequency are:".\
+        format(n))
+        for repeat in mf_repeats[0] :
+            print(repeat)
+        print("Each of these repeats occur {} times".format(mf_repeats[1]))
     else :
         print("Unimplemented option... TODO")
 
