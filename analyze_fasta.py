@@ -61,9 +61,14 @@ def main() :
         rframe = args.longest_orf[0]
         lorf = orf.getShortLongestORFsInAll(data_fasta, False, rframe)
         if rframe in (1, 2, 3) :
-            print("longest orf in reading frame {} = {}".format(rframe, lorf))
+            print("longest ORF in reading frame {} = {}".format(rframe, lorf[0]))
+            print("start index of this ORF is {}".format(lorf[1]))
+            print("seq_id of this ORF is {}".format(lorf[2]))
         elif rframe == 0 :
-            print("longest orf in all reading frames = {}".format(lorf))
+            print("longest ORF in all reading frames = {}".format(lorf[0]))
+            print("start index of this ORF is {}".format(lorf[1]))
+            print("seq_id of this ORF is {}".format(lorf[2]))
+            
         else :
             print("Reading frame parameter must be 1, 2, 3, or 0!")
     else :

@@ -47,18 +47,17 @@ def getNextCodonIndex(dna, start_index=0, find_start_codon=True,
     return next_start_index
 
 def getOpenReadingFrames(raw_dna, reading_frame=1) :
-    """ Returns a list called orfs_list containing 3-tuples. Each tuple
+    """ Returns a list called orfs_list containing 2-tuples. Each tuple
     corresponds to an Open Reading Frame (ORF) where:
     tuple[0] = index of start codon
-    tuple[1] = index of stop codon
-    tuple[2] = length of the ORF
+    tuple[1] = length of the ORF
     
     raw_dna - string, rep'n of DNA sequence of A's, T's, G's and C's
           which can be upper or lower case
     reading_frame - int, valid values: 1, 2, or 3 corresponding to reading
           frames 1, 2, or 3 respespectively to be used in reading dna string
     
-    orfs_list is sorted by tuple[2] (ORF length) ascending order
+    orfs_list is sorted by tuple[1] (ORF length) ascending order
     """
     dna = raw_dna[reading_frame-1:]  # Read only bases in the reading frame
     orfs_list = []
@@ -71,7 +70,8 @@ def getOpenReadingFrames(raw_dna, reading_frame=1) :
             # Create returned tuples as 1-based indices.
             start_codon_index = start_codon_python_index + 1
             stop_codon_index = stop_codon_python_index + 1
-            orf_record = (start_codon_index, stop_codon_index, orf_length)
+            true_start_codon_index = start_codon_index+reading_frame-1
+            orf_record = (true_start_codon_index, orf_length)
             orfs_list.append(orf_record)
             #print("  *********** adding tuple:", orf_record, " ***********\n")
         else :
@@ -81,55 +81,50 @@ def getOpenReadingFrames(raw_dna, reading_frame=1) :
         getNextCodonIndex(dna, start_codon_python_index + 3)
     # Sort list by third element in tuple: (how does lambda thingy work?...)
     # http://stackoverflow.com/questions/3121979/how-to-sort-list-tuple-of-lists-tuples
-    orfs_list = sorted(orfs_list, key=lambda tup: tup[2])
+    orfs_list = sorted(orfs_list, key=lambda tup: tup[1])
     
     return orfs_list
-
-def getShortLongestORFsInSeq(dna, want_shortest=True, reading_frame=1) :
-    """ Returns the length of the shortest Open Reading Frame ORF if
-    want_shortest = True in dna. Otherwise, returns the longest ORF.
-    If no ORFs could be found, -1 is returned.
-    dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
-          can be upper or lower case
-    reading_frame - int, valid values: 1, 2, or 3 corresponding to reading
-          frames 1, 2, or 3 respespectively to be used in reading dna string
-    """
-    orfs = getOpenReadingFrames(dna, reading_frame)
-    if len(orfs) < 1 :
-        return -1
-    # print("getShortLongestORFsInSeq: len(orfs) = {}".format(len(orfs)))
-    if want_shortest :
-        result = orfs[0][2]
-    else :
-        result = orfs[-1][2]
-        
-    return result
     
 def getShortLongestORFsInAll(dna_dict, want_shortest=True, reading_frame=1) :
-    """ Returns the length of the shortest Open Reading Frame ORF if
-    want_shortest = True in dna_dict. Otherwise, returns the longest ORF.
-    If no ORFs could be found, -1 is returned.
+    """ Returns a 3-tuple where 
+    
+    tuple[0] - length of the ORF, shortest if want_shortest = True or
+               longest if want_shortest = False
+    tuple[1] - index of the start codon for the ORF of interest.
+    tuple[2] - seq_id where the ORF was found.
+    
+    If no ORFs could be found, return tuple will have -1 in first 2 elements.
+    
     dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
           can be upper or lower case
     reading_frame - reading frame to find longest or shortest ORF on. Valid
                     values are 1, 2, 3, or 0 if over all reading frames
     """
     minmaxlen = -1
+    minmaxindex = -1
+    minmaxseq = "unassigned"
     if not(reading_frame in (0, 1, 2, 3)) : return minmaxlen
     all_rfs = (1, 2, 3)  # All valid reading frames
     rframes = [reading_frame, ] if (reading_frame in all_rfs) else all_rfs
+    print("rframes = {}".format(rframes))
     for rframe in rframes :
         for seq_id, dna in dna_dict.items() :
-            orf = getShortLongestORFsInSeq(dna, want_shortest, rframe)
-            if orf == -1 : continue  # Couldn't find an ORFs in this seq_id.
+            orfs = getOpenReadingFrames(dna, rframe)
+            if len(orfs) < 1 :
+                # print("len={}, index={}, seq={}".format(orfs[-1][1], orfs[-1][0], seq_id))
+                continue  # Couldn't find an ORF in this seq_id
             if want_shortest :
-                if orf < minmaxlen :
-                    minmaxlen = orf
+                if orfs[0][1] < minmaxlen :
+                    minmaxindex = orfs[0][0]
+                    minmaxlen = orfs[0][1]
+                    minmaxseq = seq_id
             else :
-                if orf > minmaxlen :
-                    minmaxlen = orf
+                if orfs[-1][1] > minmaxlen :
+                    minmaxindex = orfs[-1][0]
+                    minmaxlen = orfs[-1][1]
+                    minmaxseq = seq_id
         
-    return minmaxlen
+    return (minmaxlen, minmaxindex, minmaxseq)
     
     
     

@@ -41,7 +41,7 @@ def main():
                 format(orf[2], orf[0]+rf_offset))  # add back offset
             output_content.append("  ***")
         output_content.append("----------")
-        #print("**********END processing sequence = ", seq_id, " **********")
+        #print("********** END processing sequence = ", seq_id, " **********")
     
     output_content.append("+++++++++++++++++++++++++++++++++++++++++++++++++")
     output_content.append("LENGTH OF LONGEST ORF reading frame 1 = {}".\
