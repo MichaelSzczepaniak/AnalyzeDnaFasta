@@ -1,11 +1,35 @@
 file name          description                             purpose
 ----------------   -------------------------------------   --------
-dna.test01.fasta   9 sequences: 2 with 8 triplets,         test getLongestSeq
+dna.dev.fasta      9 sequences: 2 with 8 triplets,         test getLongestSeq
                                 1 with 5 triplets,         and getShortestSeq
                                 3 with 4 triplets, and     functions
                                 3 with 3 triplets
+                                ------------------
+                                3 have no ORF's,           test functions in
+                                2 ORFs in RF 1,            module dna_orfs.py
+                                2 ORFs in RF 2,            looking for ORF in
+                                2 ORFs in RF 3             reading frames 1, 2, or 3
                                 
-dna.test02.fasta   9 sequences: 3 with no ORF's,           detect ORF's in each
-                                2 ORFs in RF 1,            of the 3 reading
-                                2 ORFs in RF 2,            frames: 1, 2, or 3
-                                2 ORFs in RF 3
+dna.example1.fasta
+
+dna.example2.fasta  larger FASTA file: Record count = 18
+                                longest sequence = 4894, sequence id of longest =
+                                gi|142022655|gb|EQ086233.1|255
+                                ------------------
+                                shortest sequence = 115, sequence id of longest =
+                                gi|142022655|gb|EQ086233.1|346
+                                ------------------
+                                longest ORF in reading frame 1 = 2394
+                                start index of this ORF is 385
+                                seq_id of this ORF is gi|142022655|gb|EQ086233.1|45
+                                ------------------
+                                longest ORF in reading frame 2 = 1458
+                                start index of this ORF is 3071
+                                seq_id of this ORF is gi|142022655|gb|EQ086233.1|16
+                                ------------------
+                                longest ORF in reading frame 3 = 1821
+                                start index of this ORF is 636
+                                seq_id of this ORF is gi|142022655|gb|EQ086233.1|527
+                                ------------------
+                                For sequence: gi|142022655|gb|EQ086233.1|16,
+                                longest ORF is in reading frame 3 with length = 1644
