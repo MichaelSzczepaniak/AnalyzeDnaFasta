@@ -73,9 +73,25 @@ def main() :
             print("Reading frame parameter must be 1, 2, 3, or 0!")
     elif args.lorf_in_seq :
         sid = args.lorf_in_seq[0]
-        rframe = int(args.lorf_in_seq[1])
+        try :
+            rframe = int(args.lorf_in_seq[1])
+        except:
+            print("Reading frame could not be interpretted as a digit.")
+            sys.exit(0)
+        lorf_seq = orf.getLengthLongestORF(data_fasta, sid, rframe)
         print("sid: {}".format(sid))
         print("rframe: {}".format(rframe))
+        if (rframe == 0) or (rframe in (1, 2, 3)) :
+            print("For sequence: {}, ".format(sid))
+            if rframe == 0 :
+                print("longest ORF is in reading frame {} with length = {}".\
+                format(lorf_seq[1], lorf_seq[0]))
+            else :
+                print("longest ORF in reading frame {} is {}".\
+                format(lorf_seq[1], lorf_seq[0]))
+        else :
+            print("getLengthLongestORF expecting reading_frame to be 0-3.")
+            sys.exit(0)
     else :
         print("Unimplemented option... TODO")
 

@@ -126,11 +126,29 @@ def getShortLongestORFsInAll(dna_dict, want_shortest=True, reading_frame=1) :
     return (minmaxlen, minmaxindex, minmaxseq)
     
 def getLengthLongestORF(dna_dict, seq_id, reading_frame=1) :
-    """ 
+    """ Returns a 2-tuples:
+    tuple[0] - length of the longest ORF in seq_id
+    tuple[1] - reading for which the longeset ORF is computed
+    
+    dna_dict - keys = sequence ids, values = DNA sequence of A's, T's, G's
+               and C's which can be upper or lower case
     """
     dna = dna_dict[seq_id]
-    orfs = getOpenReadingFrames(dna, reading_frame)
-    if len(orfs) > 1 :
-        return orfs[-1][0]
+    if reading_frame in (1, 2, 3) :
+        orfs = getOpenReadingFrames(dna, reading_frame)
+        if len(orfs) > 1 :
+            return (orfs[-1][0], reading_frame)
+        else :
+            return (0, reading_frame)
+    elif reading_frame == 0 :
+        lorf = -1  # Init length of longest ORF
+        for rf in (1, 2, 3) :
+            orfs = getOpenReadingFrames(dna, rf)
+            if orfs[-1][1] > lorf :
+                lorf = orfs[-1][1]
+                rframe = rf
+        return(lorf, rf)
     else :
-        return 0
+        print("getLengthLongestORF expecting reading_frame to be 1,2,3, or 0.")
+        return (-1, reading_frame)
+    
