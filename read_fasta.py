@@ -3,7 +3,7 @@
 def readFasta(inFilePath=".\dna.example.fasta") :
     """ Reads a FASTA file inFilePath into a dictionary where
     the sequence identifiers are the keys and the DNA
-    seqeunce for that record are the values.
+    sequence for that record are the values.
     
     Keyword aguments:
     inFilePath -- path to the FASTA file to be read
