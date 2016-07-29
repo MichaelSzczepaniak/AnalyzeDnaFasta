@@ -101,7 +101,11 @@ def main() :
         except:
             print("Size of repeat could not be interpretted as a digit.")
             sys.exit(0)
-        print("size of repeat is {}".format(n))
+        mf_repeat = nreps.getMostFrequentRepeatN(data_fasta, n)
+        print("Most frequently occuring repeat of size {} is {}".format(n, mf_repeat))
+        mf_repeat_count = nreps.getAllOccsOfRepeat(data_fasta, mf_repeat)
+        print("Repeat {} occurs a total of {} times in the input FASTA file.".\
+        format(mf_repeat, mf_repeat_count))
     else :
         print("Unimplemented option... TODO")
 
