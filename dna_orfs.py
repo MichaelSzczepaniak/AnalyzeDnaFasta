@@ -1,5 +1,4 @@
 
-
 # test:
 # dna = "ATGGGTATGGGGTGA", start codons at 0 and 6, stop codon at 12
 # If start_index = 0, start codon at 0 found, or stop codon at 12 found.
@@ -126,5 +125,12 @@ def getShortLongestORFsInAll(dna_dict, want_shortest=True, reading_frame=1) :
         
     return (minmaxlen, minmaxindex, minmaxseq)
     
-    
-    
+def getLengthLongestORF(dna_dict, seq_id, reading_frame=1) :
+    """ 
+    """
+    dna = dna_dict[seq_id]
+    orfs = getOpenReadingFrames(dna, reading_frame)
+    if len(orfs) > 1 :
+        return orfs[-1][0]
+    else :
+        return 0
