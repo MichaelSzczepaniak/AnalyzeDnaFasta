@@ -25,11 +25,12 @@ def main() :
     help="Return the length of the longest sequence in the input FASTA file")
     parser.add_argument("--shortest_seq", action='store_true',
     help="Return the length of the longest sequence in the input FASTA file")
-    
     parser.add_argument("--longest_orf", type=int, nargs=1,
     help="Return the longest open reading frame (ORF) for reading frames \
     1, 2, 3, or all (0)")
-    
+    parser.add_argument("--lorf_in_seq", nargs=2,
+    help="Return the length of the longest open reading frame (ORF) for a \
+    given sequence for reading frames 1, 2, 3, or all (0)")
     args = parser.parse_args()
     if args.filename :
         data_fasta = rf.readFasta(file_fasta)  # Always read the FASTA file.
@@ -68,9 +69,13 @@ def main() :
             print("longest ORF in all reading frames = {}".format(lorf[0]))
             print("start index of this ORF is {}".format(lorf[1]))
             print("seq_id of this ORF is {}".format(lorf[2]))
-            
         else :
             print("Reading frame parameter must be 1, 2, 3, or 0!")
+    elif args.lorf_in_seq :
+        sid = args.lorf_in_seq[0]
+        rframe = int(args.lorf_in_seq[1])
+        print("sid: {}".format(sid))
+        print("rframe: {}".format(rframe))
     else :
         print("Unimplemented option... TODO")
 
