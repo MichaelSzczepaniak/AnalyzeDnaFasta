@@ -31,6 +31,9 @@ def main() :
     parser.add_argument("--lorf_in_seq", nargs=2,
     help="Return the length of the longest open reading frame (ORF) for a \
     given sequence for reading frames 1, 2, 3, or all (0)")
+    parser.add_argument("--mfrepeat_occurs", type=int, nargs=1,
+    help="Return the most frequently occuring repeat of size n")
+    
     args = parser.parse_args()
     if args.filename :
         data_fasta = rf.readFasta(file_fasta)  # Always read the FASTA file.
@@ -92,6 +95,13 @@ def main() :
         else :
             print("getLengthLongestORF expecting reading_frame to be 0-3.")
             sys.exit(0)
+    elif args.mfrepeat_occurs :
+        try :
+            n = int(args.mfrepeat_occurs[0])
+        except:
+            print("Size of repeat could not be interpretted as a digit.")
+            sys.exit(0)
+        print("size of repeat is {}".format(n))
     else :
         print("Unimplemented option... TODO")
 
