@@ -2,10 +2,11 @@
 
 
 def getNRepeats(dna, n=2, values_are_counts=True) :
-    """ Returns a dictionary where the keys are the lower case substrings
-    of length n in dna and values are are either 1) the frequency/count of
-    each substring if values_are_counts = True (default) or 2) the index of
-    each substring found in dna if values_are_counts = False.
+    """ Returns a dictionary where:
+    keys = lower case substrings of length n in dna and values are are either
+    1) the frequency/count of each substring if values_are_counts = True
+    (default) or 2) the index of each substring found in dna if
+    values_are_counts = False.
     
     dna - string, rep'n of DNA sequence of A's, T's, G's and C's which
           can be upper or lower case
