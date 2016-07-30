@@ -20,13 +20,17 @@ Example: <pre>python analyze\_fasta.py data/dna.example1.fasta --record\_count</
 
 ### Inputs
 The first parameter, **fastafile** is always to location of the FASTA file which will be parsed and analyzed for the quantities described above.
-The second parameter, **option** is always one of the following options:  
+The second parameter, **option** can be one of the following:  
 
 <ul>
 <li><pre>--record_count</pre> Return the number of records in the input FASTA file.</li>
 <li><pre>--longest_seq</pre> Return the length of the longest sequence in the input FASTA file.</li>
 <li><pre>--shortest_seq</pre> Return the length of the shortest sequence in the input FASTA file.</li>
 <li><pre>--longest_orf n</pre> Return the longest open reading frame (ORF) for reading frame n = 1, 2, or 3. Set n = 0 to obtain the longest ORF of any reading frame.</li>
+<li><pre>--lorf_in_seq sid n</pre>Return the length of the longest open reading frame (ORF) for a given sequence identifier sid for reading frame n = 1, 2, 3, or 0 (all).</li>
+<li><pre>--mfrepeat_occurs n</pre>Return the most frequently occuring repeat of size n.</li>
+<li><pre>--get_max_nrepeats n</pre>Return all repeats of size n that have the highest frequency of occurance.</li>
+<li><pre>--seq_occurs seq</pre>Return the the number of occurances of a nucleotide sequence seq.</li>
 </ul>
 
 These characters may be lower case (as permitted by [NCBI in doing BLAST queries](http://blast.ncbi.nlm.nih.gov/blastcgihelp.shtml)).
