@@ -14,9 +14,15 @@ This is a small Python project that reads a file containing DNA sequences in a m
 9. Determine the most frequent repeat in a given set of repeats.
 
 ## Usage
-To run the program, from the command line, execute: <pre>python analyze\_fasta.py <fastafile> </pre>
+To run the program, from the command line, execute:  
 
-Example: <pre>python analyze\_fasta.py data/dna.example1.fasta --record\_count</pre>
+`python analyze_fasta.py <fastafile> <--option> [parameters]`
+
+Example:
+
+`python analyze_fasta.py data/dna.example1.fasta --record_count`
+
+Examples of each usage type (described below) can be found in the **data** directory of this project.  The two files that start with **correct\_results\_** show examples run from the ipython shell.  If you are running from the command line, just replace **run** with **python**.
 
 ### Inputs
 The first parameter, **fastafile** is always to location of the FASTA file which will be parsed and analyzed for the quantities described above.
@@ -27,10 +33,10 @@ The second parameter, **option** can be one of the following:
 <li><pre>--longest_seq</pre> Return the length of the longest sequence in the input FASTA file.</li>
 <li><pre>--shortest_seq</pre> Return the length of the shortest sequence in the input FASTA file.</li>
 <li><pre>--longest_orf n</pre> Return the longest open reading frame (ORF) for reading frame n = 1, 2, or 3. Set n = 0 to obtain the longest ORF of any reading frame.</li>
-<li><pre>--lorf_in_seq sid n</pre>Return the length of the longest open reading frame (ORF) for a given sequence identifier sid for reading frame n = 1, 2, 3, or 0 (all).</li>
-<li><pre>--mfrepeat_occurs n</pre>Return the most frequently occuring repeat of size n.</li>
-<li><pre>--get_max_nrepeats n</pre>Return all repeats of size n that have the highest frequency of occurance.</li>
-<li><pre>--seq_occurs seq</pre>Return the the number of occurances of a nucleotide sequence seq.</li>
+<li><pre>--lorf_in_seq sid n</pre> Return the length of the longest open reading frame (ORF) for a given sequence identifier sid for reading frame n = 1, 2, 3, or 0 (all).</li>
+<li><pre>--mfrepeat_occurs n</pre> Return the most frequently occuring repeat of size n.</li>
+<li><pre>--get_max_nrepeats n</pre> Return all repeats of size n that have the highest frequency of occurance.</li>
+<li><pre>--seq_occurs seq</pre> Return the the number of occurances of a nucleotide sequence seq.</li>
 </ul>
 
 These characters may be lower case (as permitted by [NCBI in doing BLAST queries](http://blast.ncbi.nlm.nih.gov/blastcgihelp.shtml)).
