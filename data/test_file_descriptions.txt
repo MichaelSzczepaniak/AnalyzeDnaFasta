@@ -1,0 +1,18 @@
+file name          description                             purpose
+----------------   -------------------------------------   --------
+dna.dev.fasta      9 sequences: 2 with 8 triplets,         test getLongestSeq
+                                1 with 5 triplets,         and getShortestSeq
+                                3 with 4 triplets, and     functions
+                                3 with 3 triplets
+                                ------------------
+                                3 have no ORF's,           test functions in
+                                2 ORFs in RF 1,            module dna_orfs.py
+                                2 ORFs in RF 2,            looking for ORF in
+                                2 ORFs in RF 3             reading frames 1, 2, or 3
+                                
+dna.example1.fasta  larger FASTA file: Record count = 25   test all functions on large file, see file
+                                                           correct_results_for_dna.example1.fasta.txt
+                                                           for details of correct results
+dna.example2.fasta  larger FASTA file: Record count = 18   test all functions on large file, see file
+                                                           correct_results_for_dna.example2.fasta.txt
+                                                           for details of correct results
