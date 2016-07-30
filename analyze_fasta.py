@@ -33,10 +33,11 @@ def main() :
     given sequence for reading frames 1, 2, 3, or all (0)")
     parser.add_argument("--mfrepeat_occurs", type=int, nargs=1,
     help="Return the most frequently occuring repeat of size n")
-    
     parser.add_argument("--get_max_nrepeats", type=int, nargs=1,
     help="Return all repeats of size n that have the highest frequency of \
     occurance")
+    parser.add_argument("--seq_occurs", nargs=1,
+    help="Return the the number of occurances of a nucleotide sequence")
     
     args = parser.parse_args()
     if args.filename :
@@ -107,7 +108,7 @@ def main() :
             sys.exit(0)
         mf_repeat = nreps.getFirstMostFrequentRepeatN(data_fasta, n)
         print("First instance of most frequently occuring repeat of size \
-        {} is {}".format(n, mf_repeat))
+{} is {}".format(n, mf_repeat))
         mf_repeat_count = nreps.getAllOccsOfRepeat(data_fasta, mf_repeat)
         print("Repeat {} occurs a total of {} times in the input FASTA file.".\
         format(mf_repeat, mf_repeat_count))
@@ -118,13 +119,18 @@ def main() :
             print("Size of repeat could not be interpretted as a digit.")
             sys.exit(0)
         mf_repeats = nreps.getAllMostFrequentRepeatN(data_fasta, n)
-        print("Size {} repeats that occur with the highest frequency are:".\
+        print("Size {} repeats that occur with the highest frequency".\
         format(n))
+        print("occur {} times.  These sequences are:".format(len(mf_repeats[0])))
         for repeat in mf_repeats[0] :
             print(repeat)
-        print("Each of these repeats occur {} times".format(mf_repeats[1]))
+        print("Each of these repeats occur {} times.".format(mf_repeats[1]))
+    elif args.seq_occurs :
+        seq = args.seq_occurs[0]
+        seq_count = nreps.getAllOccsOfRepeat(data_fasta, seq)
+        print("The sequence {} occurs a total of {} in the data file".format(seq, seq_count))
     else :
-        print("Unimplemented option... TODO")
+        print("This option is not implemented.")
 
 def getRecordCount(fasta_dat) :
     """ fasta_dat - dictionary with keys = sequence ids and
