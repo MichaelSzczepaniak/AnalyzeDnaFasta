@@ -1,4 +1,4 @@
-# DnaSeqFastA
+# AnalyzeDnaFasta
 
 ## Description
 This is a small Python project that reads a file containing DNA sequences in a multi-FASTA format and does the following analysis:
@@ -32,7 +32,7 @@ The second parameter, **option** is always one of the following options:
 These characters may be lower case (as permitted by [NCBI in doing BLAST queries](http://blast.ncbi.nlm.nih.gov/blastcgihelp.shtml)).
 
 ### Outputs
-The program outputs a file call **dnaFastaAnalysis.txt** to the directory from which **dnaseqfasta.py** is executed.
+The program outputs the requested results to the terminal.
 
 ## Python Version
 This project was developed using the Anaconda distribution of Python 3.5.1.
