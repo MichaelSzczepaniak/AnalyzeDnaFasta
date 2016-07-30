@@ -1,0 +1,89 @@
+
+C:\data\dev\DnaSeqFastA>ipython
+Python 3.5.1 |Anaconda 4.0.0 (64-bit)| (default, Feb 16 2016, 09:49:46) [MSC v.1900 64 bit (AMD64)]
+Type "copyright", "credits" or "license" for more information.
+
+IPython 4.2.0 -- An enhanced Interactive Python.
+?         -> Introduction and overview of IPython's features.
+%quickref -> Quick reference.
+help      -> Python's own help system.
+object?   -> Details about 'object', use 'object??' for extra details.
+
+In [1]: run analyze_fasta.py data/dna.example2.fasta --record_count
+FASTA file read successfully.
+Record count = 18
+
+In [2]: run analyze_fasta.py data/dna.example2.fasta --longest_seq
+FASTA file read successfully.
+                 Length of longest sequence = 4894
+Count of sequences that have longest length = 1
+Sequences with longest length:
+gi|142022655|gb|EQ086233.1|255
+
+In [3]: run analyze_fasta.py data/dna.example2.fasta --shortest_seq
+FASTA file read successfully.
+                 Length of shortest sequence = 115
+Count of sequences that have shortest length = 1
+Sequences with longest length:
+gi|142022655|gb|EQ086233.1|346
+
+In [4]: run analyze_fasta.py data/dna.example2.fasta --longest_orf 2
+FASTA file read successfully.
+rframes = [2]
+longest ORF in reading frame 2 = 1458
+start index of this ORF is 3071
+seq_id of this ORF is gi|142022655|gb|EQ086233.1|16
+
+In [5]: run analyze_fasta.py data/dna.example2.fasta --longest_orf 3
+FASTA file read successfully.
+rframes = [3]
+longest ORF in reading frame 3 = 1821
+start index of this ORF is 636
+seq_id of this ORF is gi|142022655|gb|EQ086233.1|527
+
+In [6]: run analyze_fasta.py data/dna.example2.fasta --longest_orf 0
+FASTA file read successfully.
+rframes = (1, 2, 3)
+longest ORF in all reading frames = 2394
+start index of this ORF is 385
+seq_id of this ORF is gi|142022655|gb|EQ086233.1|45
+
+In [7]: run analyze_fasta.py data/dna.example2.fasta --lorf_in_seq gi|142022655|gb|EQ086233.1|16 0
+FASTA file read successfully.
+sid: gi|142022655|gb|EQ086233.1|16
+rframe: 0
+For sequence: gi|142022655|gb|EQ086233.1|16,
+longest ORF is in reading frame 3 with length = 1644
+
+In [8]: run analyze_fasta.py data/dna.example2.fasta --mfrepeat_occurs 6
+FASTA file read successfully.
+First instance of most frequently occuring repeat of size 6 is gcgcgc
+Repeat gcgcgc occurs a total of 153 times in the input FASTA file.
+
+In [9]: run analyze_fasta.py data/dna.example2.fasta --get_max_nrepeats 12
+FASTA file read successfully.
+Size 12 repeats that occur with the highest frequency
+occur 4 times.  These sequences are:
+attcgccattcg
+tcgccattcgcc
+ttcgccattcgc
+cattcgccattc
+Each of these repeats occur 10 times.
+
+In [10]: run analyze_fasta.py data/dna.example2.fasta --seq_occurs TGCGCGC
+FASTA file read successfully.
+The sequence TGCGCGC occurs a total of 36 in the data file
+
+In [11]: run analyze_fasta.py data/dna.example2.fasta --seq_occurs GCGGCCG
+FASTA file read successfully.
+The sequence GCGGCCG occurs a total of 50 in the data file
+
+In [12]: run analyze_fasta.py data/dna.example2.fasta --seq_occurs CGCGCCG
+FASTA file read successfully.
+The sequence CGCGCCG occurs a total of 63 in the data file
+
+In [13]: run analyze_fasta.py data/dna.example2.fasta --seq_occurs CATCGCC
+FASTA file read successfully.
+The sequence CATCGCC occurs a total of 13 in the data file
+
+In [14]:
